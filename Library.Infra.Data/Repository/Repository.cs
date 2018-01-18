@@ -38,9 +38,9 @@ namespace Library.Infra.Data.Repository
             return DbSet.Find(id);
         }
 
-        public void Remove(Guid id)
+        public void Remove(TEntity obj)
         {
-            DbSet.Remove(GetById(id));
+            DbSet.Remove(obj);
         }
 
         public void Update(TEntity obj)
