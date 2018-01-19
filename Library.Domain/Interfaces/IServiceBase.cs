@@ -10,5 +10,6 @@ namespace Library.Domain.Interfaces
         void Update(TEntity obj);
         IEnumerable<TEntity> GetAll();
         TEntity GetById(Guid id);
+        bool Exists(Guid id);
     }
 }

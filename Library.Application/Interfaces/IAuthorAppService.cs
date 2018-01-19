@@ -11,5 +11,6 @@ namespace Library.Application.Interfaces
         void Remove(AuthorViewModel obj);
         void Update(AuthorViewModel obj);        
         AuthorViewModel GetById(Guid id);
+        bool AuthorExists(Guid id);
     }
 }

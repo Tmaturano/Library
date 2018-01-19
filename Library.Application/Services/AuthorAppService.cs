@@ -36,6 +36,19 @@ namespace Library.Application.Services
             
         }
 
+        public bool AuthorExists(Guid id)
+        {
+            try
+            {
+                return _authorService.Exists(id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public void Dispose()
         {
             _authorService.Dispose();

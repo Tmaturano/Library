@@ -42,5 +42,10 @@ namespace Library.Domain.Services
         {
             _repository.Update(obj);
         }
+
+        public bool Exists(Guid id)
+        {
+            return _repository.Exists(id);
+        }
     }
 }
