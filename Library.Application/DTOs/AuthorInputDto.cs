@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Library.Application.ViewModels
+namespace Library.Application.DTOs
 {
-    public class AuthorViewModel
-    {
-        [Key]
-        public Guid Id { get; set; }
-                
+    public class AuthorInputDto
+    {                
         [Required(ErrorMessage = "FirstName is required")]
         [MaxLength(50, ErrorMessage = "Max length is 50")]
         public string FirstName { get; set; }
@@ -25,7 +21,7 @@ namespace Library.Application.ViewModels
         [Required(ErrorMessage = "Genre is required")]
         public string Genre { get; set; }
 
-        public ICollection<BookViewModel> Books { get; set; } = new List<BookViewModel>();
+        //public ICollection<BookViewModel> Books { get; set; } = new List<BookViewModel>();
                 
     }
 }

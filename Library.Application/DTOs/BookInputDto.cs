@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Library.Application.DTOs;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace Library.Application.ViewModels
+namespace Library.Application.DTOs
 {
-    public class BookViewModel
+    public class BookInputDto
     {
         [Key]
         public Guid Id { get; set; }
@@ -16,6 +17,6 @@ namespace Library.Application.ViewModels
         [MaxLength(500, ErrorMessage = "Max length of Description is 500")]
         public string Description { get; set; }
                 
-        public AuthorViewModel Author { get; set; }
+        public AuthorInputDto Author { get; set; }
     }
 }

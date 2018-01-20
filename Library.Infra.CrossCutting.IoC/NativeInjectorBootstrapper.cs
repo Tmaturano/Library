@@ -21,9 +21,11 @@ namespace Library.Infra.CrossCutting.IoC
             services.AddSingleton(Mapper.Configuration);
             services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<IConfigurationProvider>(), sp.GetService));
             services.AddScoped<IAuthorAppService, AuthorAppService>();
+            services.AddScoped<IBookAppService, BookAppService>();
 
             //Domain
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IBookService, BookService>();
 
 
             //Infra - Data

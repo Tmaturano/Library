@@ -2,7 +2,7 @@
 
 namespace Library.Application.DTOs
 {
-    public class Author
+    public class AuthorOutputDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

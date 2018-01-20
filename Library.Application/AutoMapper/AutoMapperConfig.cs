@@ -8,8 +8,8 @@ namespace Library.Application.AutoMapper
         {
             return new MapperConfiguration(config =>
             {
-                config.AddProfile(new DomainToViewModelMappingProfile());
-                config.AddProfile(new ViewModelToDomainMappingProfile());
+                config.AddProfile(new DomainToOutputDtoMappingProfile());
+                config.AddProfile(new InputDtoToDomainMappingProfile());
             });
         }
     }

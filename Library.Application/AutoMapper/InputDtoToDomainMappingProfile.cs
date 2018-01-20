@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using Library.Application.ViewModels;
+using Library.Application.DTOs;
 using Library.Domain.Entities;
 
 namespace Library.Application.AutoMapper
 {
-    public class ViewModelToDomainMappingProfile : Profile
+    public class InputDtoToDomainMappingProfile : Profile
     {
 
-        public ViewModelToDomainMappingProfile()
+        public InputDtoToDomainMappingProfile()
         {
-            CreateMap<AuthorViewModel, Author>()
+            CreateMap<AuthorInputDto, Author>()
                 .ConstructUsing(a => new Author(a.FirstName, a.LastName, a.DateOfBirth, a.Genre));
 
-            CreateMap<BookViewModel, Book>()
+            CreateMap<BookInputDto, Book>()
                 .ConstructUsing(b => new Book(b.Title));
         }
     }

@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Library.Infra.Data\Library.Infra.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

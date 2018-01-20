@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
+using Library.Application.DTOs;
 using Library.Application.Interfaces;
-using Library.Application.ViewModels;
 using Library.Domain.Entities;
 using Library.Domain.Interfaces;
 using Library.Infra.Data.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Library.Application.Services
 {
@@ -20,13 +20,15 @@ namespace Library.Application.Services
             _authorService = authorService;
         }
 
-        public void Add(AuthorViewModel obj)
+        #region Persistance
+        
+        public bool Add(AuthorInputDto obj)
         {
             try
             {
-                _authorService.Add(_mapper.Map<AuthorViewModel, Author>(obj));
+                _authorService.Add(_mapper.Map<AuthorInputDto, Author>(obj));
 
-                var saved = unitOfWork.Commit();
+                return unitOfWork.Commit();
             }
             catch (Exception)
             {
@@ -35,6 +37,21 @@ namespace Library.Application.Services
             }
             
         }
+
+
+        public bool Remove(AuthorInputDto obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(AuthorInputDto obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Search
 
         public bool AuthorExists(Guid id)
         {
@@ -49,16 +66,11 @@ namespace Library.Application.Services
             }
         }
 
-        public void Dispose()
-        {
-            _authorService.Dispose();
-        }
-
-        public IEnumerable<AuthorViewModel> GetAll()
+        public IEnumerable<AuthorOutputDto> GetAll()
         {
             try
             {
-                return _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorViewModel>>(_authorService.GetAll());
+                return _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorOutputDto>>(_authorService.GetAll());
             }
             catch (Exception)
             {
@@ -67,19 +79,16 @@ namespace Library.Application.Services
             }
         }
 
-        public AuthorViewModel GetById(Guid id)
+        public AuthorOutputDto GetById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(AuthorViewModel obj)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
-        public void Update(AuthorViewModel obj)
+        public void Dispose()
         {
-            throw new NotImplementedException();
+            _authorService.Dispose();
         }
     }
 }
