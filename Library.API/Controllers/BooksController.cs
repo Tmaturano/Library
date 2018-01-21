@@ -11,11 +11,13 @@ namespace Library.API.Controllers
     {
         private readonly IBookAppService _bookAppService;
         private readonly IAuthorAppService _authorAppService;
+        private readonly IMapper _mapper;
         
-        public BooksController(IBookAppService bookAppService, IAuthorAppService authorAppService)
+        public BooksController(IBookAppService bookAppService, IAuthorAppService authorAppService, IMapper mapper)
         {
             _bookAppService = bookAppService;
-            _authorAppService = authorAppService;            
+            _authorAppService = authorAppService;
+            _mapper = mapper;
         }
 
         [HttpGet()]
@@ -28,7 +30,7 @@ namespace Library.API.Controllers
             return Ok(books);
         }
 
-        [HttpGet("{bookId}")]
+        [HttpGet("{bookId}", Name = "GetBookForAuthor")]
         public IActionResult GetBookForAuthor(Guid authorId, Guid bookId)
         {
             if (!_authorAppService.AuthorExists(authorId))
@@ -40,5 +42,24 @@ namespace Library.API.Controllers
                        
             return Ok(bookForAuthor);
         }
+
+        [HttpPost()]
+        public IActionResult CreateBookForAuthor(Guid authorId, [FromBody]BookInputDto bookInputDto)
+        {
+            if (bookInputDto == null)
+                return BadRequest();
+
+            if (!_authorAppService.AuthorExists(authorId))
+                return NotFound();
+
+            if (!_bookAppService.AddBookForAuthor(authorId, bookInputDto))
+                throw new Exception($"Creating a book for author {authorId} failed on save.");
+
+            var bookToReturn = _mapper.Map<BookOutputDto>(bookInputDto);
+            return CreatedAtRoute("GetBookForAuthor",
+                new { authorId = authorId, bookId = bookToReturn.Id },
+                bookToReturn);
+        }
+
     }
 }

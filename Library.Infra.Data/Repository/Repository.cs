@@ -18,9 +18,9 @@ namespace Library.Infra.Data.Repository
             DbSet = Context.Set<TEntity>();
         }
 
-        public virtual void Add(TEntity obj)
-        {
-            Context.Add(obj);
+        public void Add(TEntity obj)
+        {            
+            DbSet.Add(obj);
         }
 
         public virtual bool Exists(Guid id)

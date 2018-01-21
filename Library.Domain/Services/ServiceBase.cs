@@ -13,7 +13,7 @@ namespace Library.Domain.Services
             _repository = repository;
         }
 
-        public void Add(TEntity obj)
+        public virtual void Add(TEntity obj)
         {
             _repository.Add(obj);
         }

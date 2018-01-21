@@ -22,13 +22,15 @@ namespace Library.Application.Services
 
         #region Persistance
         
-        public bool Add(AuthorInputDto obj)
+        public (bool sucess, Guid id) Add(AuthorInputDto obj)
         {
             try
             {
-                _authorService.Add(_mapper.Map<AuthorInputDto, Author>(obj));
+                var author = _mapper.Map<AuthorInputDto, Author>(obj);
+                _authorService.Add(author);
+                
 
-                return unitOfWork.Commit();
+                return (unitOfWork.Commit(), author.Id);
             }
             catch (Exception)
             {
@@ -69,7 +71,7 @@ namespace Library.Application.Services
         public IEnumerable<AuthorOutputDto> GetAll()
         {
             try
-            {
+            {                
                 return _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorOutputDto>>(_authorService.GetAll());
             }
             catch (Exception)
@@ -81,7 +83,15 @@ namespace Library.Application.Services
 
         public AuthorOutputDto GetById(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _mapper.Map<Author, AuthorOutputDto>(_authorService.GetById(id));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         #endregion

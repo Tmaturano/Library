@@ -7,7 +7,7 @@ namespace Library.Application.Interfaces
     public interface IAuthorAppService : IDisposable
     {
         IEnumerable<AuthorOutputDto> GetAll();
-        bool Add(AuthorInputDto obj);
+        (bool sucess, Guid id) Add(AuthorInputDto obj);
         bool Remove(AuthorInputDto obj);
         bool Update(AuthorInputDto obj);
         AuthorOutputDto GetById(Guid id);

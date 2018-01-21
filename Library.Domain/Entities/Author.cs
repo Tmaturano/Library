@@ -39,6 +39,6 @@ namespace Library.Domain.Entities
         {
             Books.Add(book);
         }
-        
+                
     }
 }

@@ -46,7 +46,8 @@ namespace Library.API.Controllers
             if (authorDto == null)
                 return BadRequest();
 
-            if (!_authorService.Add(authorDto))
+            var result = _authorService.Add(authorDto);
+            if (!result.sucess)
             {
                 //Throwing an exception is expensive, but at this case, we have at the global level on Startup handling all the
                 //500 Error, so to keep it in one place, I'm throwing .
@@ -55,6 +56,7 @@ namespace Library.API.Controllers
             }
 
             var authorToReturn = _mapper.Map<AuthorOutputDto>(authorDto);
+            authorToReturn.Id = result.id;
 
             //CreatedAtRoute will contain the URI where the newly author can be found 1st parameter
             //also, the id of the generated author in 2nd parameter
@@ -62,7 +64,6 @@ namespace Library.API.Controllers
             return CreatedAtRoute("GetAuthor",
                 new { id = authorToReturn.Id },
                 authorToReturn);
-
         }
     }
 }

@@ -7,6 +7,6 @@ namespace Library.Domain.Interfaces
     public interface IBookRepository : IRepository<Book>
     {
         IEnumerable<Book> GetBooksByAuthorId(Guid authorId);
-        Book GetBookForAuthor(Guid authorId, Guid bookId);
+        Book GetBookForAuthor(Guid authorId, Guid bookId);        
     }
 }

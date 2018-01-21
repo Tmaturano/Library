@@ -14,9 +14,10 @@ namespace Library.Infra.Data.Repository
         {
 
         }
+
         public Book GetBookForAuthor(Guid authorId, Guid bookId)
         {
-            throw new NotImplementedException();
+            return DbSet.AsNoTracking().Where(b => b.Id == bookId && b.AuthorId == authorId).FirstOrDefault();
         }
 
         public IEnumerable<Book> GetBooksByAuthorId(Guid authorId)

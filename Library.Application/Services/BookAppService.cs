@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Application.DTOs;
 using Library.Application.Interfaces;
+using Library.Domain.Entities;
 using Library.Domain.Interfaces;
 using Library.Infra.Data.Interfaces;
 using System;
@@ -20,19 +21,44 @@ namespace Library.Application.Services
         }
 
         #region Persistance
-        public void Add(BookInputDto book)
+        public bool Add(BookInputDto book)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _bookService.Add(_mapper.Map<BookInputDto, Book>(book));
+                return unitOfWork.Commit();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         
-        public void Remove(BookInputDto book)
+        public bool Remove(BookInputDto book)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(BookInputDto book)
+        public bool Update(BookInputDto book)
         {
             throw new NotImplementedException();
+        }
+        
+        public bool AddBookForAuthor(Guid authorId, BookInputDto book)
+        {
+            try
+            {
+                var bookEntity = _mapper.Map<BookInputDto, Book>(book);
+                _bookService.AddBookForAuthor(authorId, bookEntity);
+
+                return Commit();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         #endregion
@@ -40,22 +66,56 @@ namespace Library.Application.Services
         #region Search
         public bool Exists(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _bookService.Exists(id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public IEnumerable<BookOutputDto> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _mapper.Map<IEnumerable<Book>, IEnumerable<BookOutputDto>>(_bookService.GetAll());
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public BookOutputDto GetBookForAuthor(Guid authorId, Guid bookId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var book = _bookService.GetBookForAuthor(authorId, bookId);
+                return _mapper.Map<Book, BookOutputDto>(book);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public IEnumerable<BookOutputDto> GetBooksByAuthorId(Guid authorId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var books = _bookService.GetBooksByAuthorId(authorId);
+                return _mapper.Map<IEnumerable<Book>, IEnumerable<BookOutputDto>>(books);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public BookOutputDto GetById(Guid id)

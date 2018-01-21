@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Application.AutoMapper;
 using Library.Infra.CrossCutting.IoC;
 using Library.Infra.Data.Context;
 using Library.Infra.Data.Extensions;
@@ -10,24 +11,43 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Reflection;
 
 namespace Library.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
 
+        public Startup(IHostingEnvironment env)
+        {
+            //IConfiguration configuration
+            //Configuration = configuration;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+            if (env.IsDevelopment())
+                builder.AddUserSecrets<Startup>();
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
+
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         //https://github.com/KevinDockx/RESTfulAPIAspNetCore_Course
         public void ConfigureServices(IServiceCollection services)
-        {            
-            services.AddDbContext<LibraryContext>(o => 
-            o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        {
+            var teste = Configuration["MySecret"];
+            //services.AddDbContext<LibraryContext>(o => 
+            //    o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<LibraryContext>(o =>
+                o.UseInMemoryDatabase("LibraryDatabase"));
 
             //services.AddMvc(options =>
             //{
@@ -41,8 +61,8 @@ namespace Library.API
                 setupAction.ReturnHttpNotAcceptable = true; //returns a hhtp 406 if media type not supported
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
             });
-
-            services.AddAutoMapper();
+                        
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperConfig)));
             services.AddCors();
 
             RegisterServices(services);
