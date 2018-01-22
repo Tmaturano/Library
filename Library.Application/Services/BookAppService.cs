@@ -45,14 +45,14 @@ namespace Library.Application.Services
             throw new NotImplementedException();
         }
         
-        public bool AddBookForAuthor(Guid authorId, BookInputDto book)
+        public (bool sucess, Guid id) AddBookForAuthor(Guid authorId, BookInputDto book)
         {
             try
             {
                 var bookEntity = _mapper.Map<BookInputDto, Book>(book);
                 _bookService.AddBookForAuthor(authorId, bookEntity);
 
-                return Commit();
+                return (Commit(), bookEntity.Id);
             }
             catch (Exception)
             {

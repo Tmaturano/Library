@@ -52,12 +52,16 @@ namespace Library.API.Controllers
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
-            if (!_bookAppService.AddBookForAuthor(authorId, bookInputDto))
+            var result = _bookAppService.AddBookForAuthor(authorId, bookInputDto);
+
+            if (!result.sucess)
                 throw new Exception($"Creating a book for author {authorId} failed on save.");
 
             var bookToReturn = _mapper.Map<BookOutputDto>(bookInputDto);
+            bookToReturn.Id = result.id;
+            bookToReturn.AuthorId = authorId;
             return CreatedAtRoute("GetBookForAuthor",
-                new { authorId = authorId, bookId = bookToReturn.Id },
+                new { authorId = bookToReturn.AuthorId, bookId = bookToReturn.Id },
                 bookToReturn);
         }
 

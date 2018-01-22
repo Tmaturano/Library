@@ -5,7 +5,7 @@ namespace Library.Application.DTOs
 {
     public class BookInputDto
     {                
-        //AuthorId comes from the URI 
+        //AuthorId already comes from the URI, no need to have a property for it
 
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(100, ErrorMessage = "Max length of Title is 100")]
