@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Library.Application.DTOs
@@ -21,7 +22,7 @@ namespace Library.Application.DTOs
         [Required(ErrorMessage = "Genre is required")]
         public string Genre { get; set; }
 
-        //public ICollection<BookViewModel> Books { get; set; } = new List<BookViewModel>();
+        public ICollection<BookInputDto> Books { get; set; } = new List<BookInputDto>();
                 
     }
 }

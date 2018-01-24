@@ -2,6 +2,7 @@
 using Library.Domain.Interfaces;
 using Library.Infra.Data.Context;
 using System;
+using System.Linq;
 
 namespace Library.Infra.Data.Repository
 {
@@ -12,16 +13,15 @@ namespace Library.Infra.Data.Repository
 
         }
 
+
+
         public void AddBookForAuthor(Guid authorId, Book book)
         {
             var author = GetById(authorId);
             if (author == null)
                 return;
 
-            author.AddBook(book);
-
-            //DbSet.Add(author);
-            //author.Books.Add(book);
+            author.AddBook(book);          
         }
     }
 }

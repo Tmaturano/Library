@@ -3,8 +3,8 @@
 namespace Library.Domain.Entities
 {
     public class Book
-    {        
-        public Guid Id { get; private set; }
+    {
+        public Guid Id { get; private set; } = Guid.NewGuid();
                 
         public string Title { get; private set; }
                 
@@ -16,12 +16,11 @@ namespace Library.Domain.Entities
 
         protected Book()
         {
-            Id = Guid.NewGuid();
+            
         }
 
         public Book(string title)
-        {
-            Id = Guid.NewGuid();
+        {            
             Title = title;
             Description = string.Empty;
         }
