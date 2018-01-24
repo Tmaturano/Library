@@ -2,6 +2,7 @@
 using Library.API.Helpers;
 using Library.Application.DTOs;
 using Library.Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -101,6 +102,15 @@ namespace Library.API.Controllers
                 return NotFound();
 
             return Ok(authors);
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult BlockAuthorCreation(Guid id)
+        {
+            if (_authorService.AuthorExists(id))
+                return new StatusCodeResult(StatusCodes.Status409Conflict);
+
+            return NotFound();
         }
     }
 }

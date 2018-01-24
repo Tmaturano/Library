@@ -59,6 +59,7 @@ namespace Library.API
             {
                 //if false, the api will return responses in the default supported format.
                 setupAction.ReturnHttpNotAcceptable = true; //returns a hhtp 406 if media type not supported
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
             });
                         
