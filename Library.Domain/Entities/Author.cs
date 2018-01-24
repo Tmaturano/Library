@@ -5,7 +5,7 @@ namespace Library.Domain.Entities
 {
     public class Author
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; private set; }
                 
         public string FirstName { get; private set; }
                 
@@ -16,6 +16,8 @@ namespace Library.Domain.Entities
         public string Genre { get; private set; }
 
         public ICollection<Book> Books { get; private set; } = new List<Book>();
+
+        //Constructor for EF
         protected Author()
         {            
             
@@ -24,6 +26,7 @@ namespace Library.Domain.Entities
         //Criar um complex object Name e trocar aqui
         public Author(string firstName, string lastName, DateTimeOffset dateOfBirth, string genre)
         {            
+            Id = Guid.NewGuid();
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;

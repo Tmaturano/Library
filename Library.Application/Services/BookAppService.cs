@@ -26,7 +26,7 @@ namespace Library.Application.Services
             try
             {
                 _bookService.Add(_mapper.Map<BookInputDto, Book>(book));
-                return unitOfWork.Commit();
+                return Commit();
             }
             catch (Exception)
             {
@@ -51,9 +51,21 @@ namespace Library.Application.Services
             }
         }
 
-        public bool Update(BookInputDto book)
+        public bool Update(BookUpdateDto bookUpdate, BookOutputDto bookOutput)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var bookUpdated = _mapper.Map(bookUpdate, bookOutput);
+                var book = _mapper.Map<BookOutputDto, Book>(bookUpdated);
+
+                _bookService.Update(book);
+                return Commit();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
         
         public (bool sucess, Guid id) AddBookForAuthor(Guid authorId, BookInputDto book)

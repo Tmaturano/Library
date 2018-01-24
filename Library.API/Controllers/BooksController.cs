@@ -83,5 +83,24 @@ namespace Library.API.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public IActionResult UpdateBookForAuthor(Guid authorId, Guid id, [FromBody]BookUpdateDto book)
+        {
+            if (book == null)
+                return BadRequest();
+
+            if (!_authorAppService.AuthorExists(authorId))
+                return NotFound();
+
+            var bookForAuthor = _bookAppService.GetBookForAuthor(authorId, id);
+            if (bookForAuthor == null)
+                return NotFound();
+                        
+            if (!_bookAppService.Update(book, bookForAuthor))
+                throw new Exception($"Updating a book {id} for author {authorId} failed on save.");
+
+            return NoContent();
+        }
+
     }
 }

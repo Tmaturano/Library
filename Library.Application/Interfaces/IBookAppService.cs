@@ -10,7 +10,7 @@ namespace Library.Application.Interfaces
         (bool sucess, Guid id) AddBookForAuthor(Guid authorId, BookInputDto book);
         BookOutputDto GetBookForAuthor(Guid authorId, Guid bookId);
         bool Add(BookInputDto book);
-        bool Update(BookInputDto book);
+        bool Update(BookUpdateDto bookUpdate, BookOutputDto bookOutput);
         bool Remove(Guid id);
         bool Exists(Guid id);
         BookOutputDto GetById(Guid id);

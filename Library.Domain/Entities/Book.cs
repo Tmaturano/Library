@@ -4,7 +4,7 @@ namespace Library.Domain.Entities
 {
     public class Book
     {
-        public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid Id { get; private set; } 
                 
         public string Title { get; private set; }
                 
@@ -14,13 +14,14 @@ namespace Library.Domain.Entities
 
         public Guid AuthorId { get; private set; }
 
+        //Constructor for EF
         protected Book()
-        {
-            
+        {            
         }
 
         public Book(string title)
-        {            
+        {
+            Id = Guid.NewGuid();
             Title = title;
             Description = string.Empty;
         }
