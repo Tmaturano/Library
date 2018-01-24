@@ -40,6 +40,27 @@ namespace Library.Application.Services
             
         }
 
+        public (bool sucess, IEnumerable<Guid> ids) AddAuthorCollection(IEnumerable<AuthorInputDto> authors)
+        {
+            try
+            {
+                var ids = new List<Guid>();
+                foreach (var author in authors)
+                {
+                    var authorEntity = _mapper.Map<AuthorInputDto, Author>(author);
+                    _authorService.Add(authorEntity);
+                    ids.Add(authorEntity.Id);
+                }
+
+                return (unitOfWork.Commit(), ids);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         public bool Remove(AuthorInputDto obj)
         {
@@ -86,6 +107,20 @@ namespace Library.Application.Services
             try
             {
                 return _mapper.Map<Author, AuthorOutputDto>(_authorService.GetById(id));
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<AuthorOutputDto> GetAuthorsByIds(IEnumerable<Guid> ids)
+        {
+            try
+            {
+                var authors = _authorService.GetAuthorsByIds(ids);
+                return _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorOutputDto>>(authors);
             }
             catch (Exception)
             {

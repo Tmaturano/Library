@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Library.API.Helpers;
 using Library.Application.DTOs;
 using Library.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Library.API.Controllers
 {
@@ -64,6 +67,40 @@ namespace Library.API.Controllers
             return CreatedAtRoute("GetAuthor",
                 new { id = authorToReturn.Id },
                 authorToReturn);
+        }
+
+        [HttpPost("createauthors")]
+        public IActionResult CreateAuthorCollection([FromBody]IEnumerable<AuthorInputDto> authorsCollection)
+        {
+            if (authorsCollection == null)
+                return BadRequest();
+
+            var result = _authorService.AddAuthorCollection(authorsCollection);
+
+            if (!result.sucess)
+            {
+                throw new Exception("Creating authors collection failed on save");
+            }
+
+            var authorsToReturn = _mapper.Map<IEnumerable<AuthorInputDto>, IEnumerable<AuthorOutputDto>>(authorsCollection);
+            var ids = string.Join(",", result.ids);
+
+            return CreatedAtRoute("GetAuthorCollection",
+                new { ids = ids },
+                authorsToReturn);            
+        }
+
+        [HttpGet("({ids})", Name = "GetAuthorCollection")]
+        public IActionResult GetAuthorCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        {
+            if (ids == null)
+                return BadRequest();
+
+            var authors = _authorService.GetAuthorsByIds(ids);
+            if (ids.Count() != authors.Count())
+                return NotFound();
+
+            return Ok(authors);
         }
     }
 }
