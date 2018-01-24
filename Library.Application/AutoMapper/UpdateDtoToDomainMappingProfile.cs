@@ -14,7 +14,7 @@ namespace Library.Application.AutoMapper
 
             CreateMap<BookUpdateDto, BookOutputDto>();
             CreateMap<BookOutputDto, Book>()
-                .ConstructUsing(b => new Book(b.Title))
+                .ConstructUsing(b => new Book(b.Title, b.Id))
                 .ForMember(b => b.Author, opt => opt.Ignore());
 
         }

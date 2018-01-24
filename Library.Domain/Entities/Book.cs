@@ -26,6 +26,13 @@ namespace Library.Domain.Entities
             Description = string.Empty;
         }
 
+        public Book(string title, Guid id)
+        {
+            Id = id;
+            Title = title;
+            Description = string.Empty;
+        }
+
         public void AddAuthor(Author author)
         {            
             Author = author;

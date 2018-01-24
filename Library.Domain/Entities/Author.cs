@@ -19,8 +19,7 @@ namespace Library.Domain.Entities
 
         //Constructor for EF
         protected Author()
-        {            
-            
+        {                        
         }
 
         //Criar um complex object Name e trocar aqui
