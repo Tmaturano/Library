@@ -112,5 +112,17 @@ namespace Library.API.Controllers
 
             return NotFound();
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAuthor(Guid id)
+        {            
+            if (!_authorService.AuthorExists(id))
+                return NotFound();
+
+            if (!_authorService.Remove(id))
+                throw new Exception($"Deleting the author {id} failed on save");
+
+            return NoContent();
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Library.Application.Interfaces
         BookOutputDto GetBookForAuthor(Guid authorId, Guid bookId);
         bool Add(BookInputDto book);
         bool Update(BookInputDto book);
-        bool Remove(BookInputDto book);
+        bool Remove(Guid id);
         bool Exists(Guid id);
         BookOutputDto GetById(Guid id);
         IEnumerable<BookOutputDto> GetAll();

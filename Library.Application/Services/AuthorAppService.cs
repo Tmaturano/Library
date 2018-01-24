@@ -62,9 +62,20 @@ namespace Library.Application.Services
         }
 
 
-        public bool Remove(AuthorInputDto obj)
+        public bool Remove(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var author = _authorService.GetById(id);
+                _authorService.Remove(author);
+
+                return Commit();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public bool Update(AuthorInputDto obj)

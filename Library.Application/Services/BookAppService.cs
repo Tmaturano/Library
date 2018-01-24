@@ -35,9 +35,20 @@ namespace Library.Application.Services
             }
         }
         
-        public bool Remove(BookInputDto book)
+        public bool Remove(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var book = _bookService.GetById(id);
+                _bookService.Remove(book);
+
+                return Commit();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public bool Update(BookInputDto book)

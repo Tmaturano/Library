@@ -18,8 +18,7 @@ namespace Library.Domain.Services
 
         public void AddBookForAuthor(Guid authorId, Book book)
         {
-            _authorRepository.AddBookForAuthor(authorId, book);
-            //_bookRepository.AddBookForAuthor(authorId, book);
+            _authorRepository.AddBookForAuthor(authorId, book);            
         }
 
         public Book GetBookForAuthor(Guid authorId, Guid bookId)
