@@ -2,13 +2,9 @@
 
 namespace Library.Application.DTOs
 {
-    public class BookUpdateDto
+    public class BookUpdateDto : BookForManipulationDto
     {
-        [Required(ErrorMessage = "Title is required")]
-        [MaxLength(100, ErrorMessage = "Max length of Title is 100")]
-        public string Title { get; set; }
-
-        [MaxLength(500, ErrorMessage = "Max length of Description is 500")]
-        public string Description { get; set; }
+        [Required(ErrorMessage = "Description is required for updating")]
+        public override string Description { get => base.Description; set => base.Description = value; }
     }
 }

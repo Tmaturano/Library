@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.API.Helpers;
 using Library.Application.DTOs;
 using Library.Application.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
@@ -50,6 +51,12 @@ namespace Library.API.Controllers
             if (bookInputDto == null)
                 return BadRequest();
 
+            if (!ModelState.IsValid)
+            {
+                // return 422
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
@@ -90,11 +97,17 @@ namespace Library.API.Controllers
             if (book == null)
                 return BadRequest();
 
+            if (!ModelState.IsValid)
+            {
+                // return 422
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
             var bookForAuthor = _bookAppService.GetBookForAuthor(authorId, id);
-            if (bookForAuthor == null)
+            if (bookForAuthor == null) //upserting
             {
                 var bookInputDto = _mapper.Map<BookInputDto>(book);
                 var result = _bookAppService.AddBookForAuthor(authorId, bookInputDto);
@@ -118,7 +131,8 @@ namespace Library.API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateBookForAuthor(Guid authorId, Guid id, [FromBody]JsonPatchDocument<BookUpdateDto> patchDoc)
+        public IActionResult PartiallyUpdateBookForAuthor(Guid authorId, Guid id, 
+            [FromBody]JsonPatchDocument<BookUpdateDto> patchDoc)
         {
             if (patchDoc == null)
                 return BadRequest();
@@ -127,11 +141,20 @@ namespace Library.API.Controllers
                 return NotFound();
 
             var book = _bookAppService.GetBookForAuthor(authorId, id);
-            if (book == null)
-                return NotFound();
+            if (book == null)             
+                return NotFound();            
 
             var bookToPatch = _mapper.Map<BookUpdateDto>(book);
-            patchDoc.ApplyTo(bookToPatch);
+            patchDoc.ApplyTo(bookToPatch, ModelState); // this second parameter, passing the ModelState, is necessary otherwise because if a user pass an invalid field, the application will throw an error (500)
+
+            TryValidateModel(bookToPatch); //Trigger a validation and any error will be end on the ModelState. Patch need this to have the DTOs DataAnnotationErrors to ModelState
+
+            if (!ModelState.IsValid)
+            {
+                // return 422
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
 
             //Add validation
 
