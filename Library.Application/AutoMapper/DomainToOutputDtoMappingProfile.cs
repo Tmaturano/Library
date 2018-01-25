@@ -16,6 +16,7 @@ namespace Library.Application.AutoMapper
                     src.DateOfBirth.GetCurrentAge()));
 
             CreateMap<Book, BookOutputDto>();
+            CreateMap<Book, BookUpdateDto>();                
         }
     }
 }

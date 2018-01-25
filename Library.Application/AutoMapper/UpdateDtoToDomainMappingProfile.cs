@@ -18,6 +18,7 @@ namespace Library.Application.AutoMapper
                 .ConstructUsing(b => new Book(b.Title, b.Id))
                 .ForMember(b => b.Author, opt => opt.Ignore());
 
+            CreateMap<BookOutputDto, BookUpdateDto>();
         }
     }
 }
