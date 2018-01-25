@@ -11,6 +11,7 @@ namespace Library.Application.AutoMapper
             CreateMap<BookUpdateDto, Book>()
                 .ConstructUsing(b => new Book(b.Title));
 
+            CreateMap<BookUpdateDto, BookInputDto>();
 
             CreateMap<BookUpdateDto, BookOutputDto>();
             CreateMap<BookOutputDto, Book>()

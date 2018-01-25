@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Library.Application\Library.Application.csproj" />
     <ProjectReference Include="..\Library.Infra.CrossCutting.IoC\Library.Infra.CrossCutting.IoC.csproj" />
-    <ProjectReference Include="..\Library.Infra.Data\Library.Infra.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@ namespace Library.API.Controllers
         private readonly IBookAppService _bookAppService;
         private readonly IAuthorAppService _authorAppService;
         private readonly IMapper _mapper;
-        
+
         public BooksController(IBookAppService bookAppService, IAuthorAppService authorAppService, IMapper mapper)
         {
             _bookAppService = bookAppService;
@@ -26,7 +26,7 @@ namespace Library.API.Controllers
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
-            var books = _bookAppService.GetBooksByAuthorId(authorId);            
+            var books = _bookAppService.GetBooksByAuthorId(authorId);
             return Ok(books);
         }
 
@@ -39,7 +39,7 @@ namespace Library.API.Controllers
             var bookForAuthor = _bookAppService.GetBookForAuthor(authorId, bookId);
             if (bookForAuthor == null)
                 return NotFound();
-                       
+
             return Ok(bookForAuthor);
         }
 
@@ -94,8 +94,22 @@ namespace Library.API.Controllers
 
             var bookForAuthor = _bookAppService.GetBookForAuthor(authorId, id);
             if (bookForAuthor == null)
-                return NotFound();
-                        
+            {
+                var bookInputDto = _mapper.Map<BookInputDto>(book);
+                var result = _bookAppService.AddBookForAuthor(authorId, bookInputDto);
+
+                if (!result.sucess)
+                    throw new Exception($"Upserting a book for author {authorId} failed on save.");
+
+                var bookToReturn = _mapper.Map<BookOutputDto>(bookInputDto);
+                bookToReturn.Id = result.id;
+                bookToReturn.AuthorId = authorId;
+
+                return CreatedAtRoute("GetBookForAuthor",
+                    new { authorId = bookToReturn.AuthorId, bookId = bookToReturn.Id },
+                    bookToReturn);
+            }
+
             if (!_bookAppService.Update(book, bookForAuthor))
                 throw new Exception($"Updating a book {id} for author {authorId} failed on save.");
 
