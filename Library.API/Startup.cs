@@ -4,6 +4,7 @@ using Library.Infra.CrossCutting.IoC;
 using Library.Infra.Data.Context;
 using Library.Infra.Data.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -71,9 +72,19 @@ namespace Library.API
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, LibraryContext libraryContext,
-            ILoggerFactory logger)
+            ILoggerFactory loggerFactory)
         {
-            logger.AddConsole();
+            loggerFactory.AddConsole();
+
+            /*
+             LogLevel.Trace is used for most defailed log message, only valuable into a developer debugging issue
+             LogLevel.Debug contains information that may be useful for debugging but it doesn't have any long term value.
+             LogLevel.Information is used to track the general flow of the application. Has some long term value.
+             LogLevel.Warning shoudl be used for unexpected events in the application flow (Errors for example that don't make the application stop, but we must investigate in the future
+             LogLevel.Error should be used when the current flow of the application stop because of an unhandled error.
+             LogLevel.Critical should be used for any system crashes 
+             */
+            loggerFactory.AddDebug(LogLevel.Information);                        
 
             if (env.IsDevelopment())
             {
@@ -86,6 +97,15 @@ namespace Library.API
                 {
                     appBuilder.Run(async context =>
                     {
+                        var exceptionhandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                        if (exceptionhandlerFeature != null)
+                        {
+                            var logger = loggerFactory.CreateLogger("Global exception logger");
+
+                            //The first parameter is the code(or Id) of the error
+                            logger.LogError(500, exceptionhandlerFeature.Error, exceptionhandlerFeature.Error.Message);
+                        }
+
                         context.Response.StatusCode = 500;
                         await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
                     });

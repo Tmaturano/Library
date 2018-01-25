@@ -4,6 +4,7 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Library.API.Controllers
@@ -14,12 +15,15 @@ namespace Library.API.Controllers
         private readonly IBookAppService _bookAppService;
         private readonly IAuthorAppService _authorAppService;
         private readonly IMapper _mapper;
+        private readonly ILogger<BooksController> _logger;
 
-        public BooksController(IBookAppService bookAppService, IAuthorAppService authorAppService, IMapper mapper)
+        public BooksController(IBookAppService bookAppService, IAuthorAppService authorAppService, IMapper mapper,
+            ILogger<BooksController> logger)
         {
             _bookAppService = bookAppService;
             _authorAppService = authorAppService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet()]
@@ -86,6 +90,8 @@ namespace Library.API.Controllers
 
             if (!_bookAppService.Remove(id))
                 throw new Exception($"Deleting a book {id} for author {authorId} failed on save.");
+
+            _logger.LogInformation(100, $"The book {id} for author {authorId} was deleted.");
 
             //sucess but don't have a content
             return NoContent();
