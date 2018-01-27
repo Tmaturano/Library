@@ -15,7 +15,7 @@ namespace Library.API.Controllers
     {
         private readonly IAuthorAppService _authorService;
         private readonly IMapper _mapper;
-
+        
         public AuthorsController(IAuthorAppService authorService, IMapper mapper)
         {
             _authorService = authorService;
@@ -23,9 +23,14 @@ namespace Library.API.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetAuthors()
+        public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters) //([FromQuery(Name = "page")]int pageNumber = 1, [FromQuery]int pageSize = 10)
         {
-            var authors = _authorService.GetAll();
+            //pageSize = pageSize > MaxPageSize ? MaxPageSize : pageSize;
+            /*
+             The ModelBinding framework is smart because it will look for matching property name inside that class             
+             */
+
+            var authors = _authorService.GetAll(authorsResourceParameters.PageSize, authorsResourceParameters.PageNumber);
 
             //By Default, JsonResult returns a 200 (Ok) Http Status Code
             //return new JsonResult(authorsDTO);

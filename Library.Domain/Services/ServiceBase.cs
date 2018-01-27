@@ -28,9 +28,9 @@ namespace Library.Domain.Services
             _repository.Dispose();
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public IEnumerable<TEntity> GetAll(int pageSize, int pageNumber)
         {
-            return _repository.GetAll();
+            return _repository.GetAll(pageSize, pageNumber);
         }
 
         public TEntity GetById(Guid id)

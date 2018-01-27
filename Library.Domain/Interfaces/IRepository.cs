@@ -10,6 +10,6 @@ namespace Library.Domain.Interfaces
         void Remove(TEntity obj);
         bool Exists(Guid id);
         TEntity GetById(Guid id);
-        IEnumerable<TEntity> GetAll();
+        IEnumerable<TEntity> GetAll(int pageSize, int pageNumber);
     }
 }

@@ -14,6 +14,6 @@ namespace Library.Application.Interfaces
         bool Remove(Guid id);
         bool Exists(Guid id);
         BookOutputDto GetById(Guid id);
-        IEnumerable<BookOutputDto> GetAll();
+        IEnumerable<BookOutputDto> GetAll(int pageSize, int pageNumber);
     }
 }

@@ -8,7 +8,7 @@ namespace Library.Domain.Interfaces
         void Add(TEntity obj);
         void Remove(TEntity obj);
         void Update(TEntity obj);
-        IEnumerable<TEntity> GetAll();
+        IEnumerable<TEntity> GetAll(int pageSize, int pageNumber);
         TEntity GetById(Guid id);
         bool Exists(Guid id);
     }

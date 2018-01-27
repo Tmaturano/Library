@@ -100,11 +100,11 @@ namespace Library.Application.Services
             }
         }
 
-        public IEnumerable<BookOutputDto> GetAll()
+        public IEnumerable<BookOutputDto> GetAll(int pageSize, int pageNumber)
         {
             try
             {
-                return _mapper.Map<IEnumerable<Book>, IEnumerable<BookOutputDto>>(_bookService.GetAll());
+                return _mapper.Map<IEnumerable<Book>, IEnumerable<BookOutputDto>>(_bookService.GetAll(pageSize, pageNumber));
             }
             catch (Exception)
             {

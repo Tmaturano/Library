@@ -6,7 +6,7 @@ namespace Library.Application.Interfaces
 {
     public interface IAuthorAppService : IDisposable
     {
-        IEnumerable<AuthorOutputDto> GetAll();
+        IEnumerable<AuthorOutputDto> GetAll(int pageSize, int pageNumber);
         (bool sucess, Guid id) Add(AuthorInputDto obj);
         (bool sucess, IEnumerable<Guid> ids) AddAuthorCollection(IEnumerable<AuthorInputDto> authors);
         bool Remove(Guid id);

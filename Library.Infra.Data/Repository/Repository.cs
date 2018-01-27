@@ -28,9 +28,11 @@ namespace Library.Infra.Data.Repository
             return GetById(id) != null;
         }
 
-        public virtual IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll(int pageSize, int pageNumber)
         {
-            return DbSet.ToList();
+            return DbSet.Skip(pageSize * (pageNumber -1))
+                    .Take(pageSize)
+                    .ToList();
         }
 
         public TEntity GetById(Guid id)
