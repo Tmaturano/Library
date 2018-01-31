@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
+    <ProjectReference Include="..\Library.Infra.CrossCutting.Helpers\Library.Infra.CrossCutting.Helpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

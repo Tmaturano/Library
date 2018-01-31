@@ -1,4 +1,5 @@
 ﻿using Library.Domain.Interfaces;
+using Library.Infra.CrossCutting.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +29,7 @@ namespace Library.Domain.Services
             _repository.Dispose();
         }
 
-        public IEnumerable<TEntity> GetAll(int pageSize, int pageNumber)
+        public PagedList<TEntity> GetAll(int pageSize, int pageNumber)
         {
             return _repository.GetAll(pageSize, pageNumber);
         }

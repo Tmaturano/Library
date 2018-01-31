@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
+    <ProjectReference Include="..\Library.Infra.CrossCutting.Helpers\Library.Infra.CrossCutting.Helpers.csproj" />
     <ProjectReference Include="..\Library.Infra.Data\Library.Infra.Data.csproj" />
   </ItemGroup>
 

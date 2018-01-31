@@ -4,6 +4,7 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +16,75 @@ namespace Library.API.Controllers
     {
         private readonly IAuthorAppService _authorService;
         private readonly IMapper _mapper;
+        private readonly IUrlHelper _urlHelper;
         
-        public AuthorsController(IAuthorAppService authorService, IMapper mapper)
+        public AuthorsController(IAuthorAppService authorService, IMapper mapper, IUrlHelper urlHelper)
         {
             _authorService = authorService;
             _mapper = mapper;
+            _urlHelper = urlHelper;
         }
 
-        [HttpGet()]
+        [HttpGet(Name = "GetAuthors")]
         public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters) //([FromQuery(Name = "page")]int pageNumber = 1, [FromQuery]int pageSize = 10)
         {
             //pageSize = pageSize > MaxPageSize ? MaxPageSize : pageSize;
             /*
              The ModelBinding framework is smart because it will look for matching property name inside that class             
              */
-
             var authors = _authorService.GetAll(authorsResourceParameters.PageSize, authorsResourceParameters.PageNumber);
+            
+            var previousPageLink = authors.HasPrevious ? CreateAuthorsResourceUri(authorsResourceParameters,
+                ResourceUriType.PreviousPage) : null;
+
+            var nextPageLink = authors.HasNext ? CreateAuthorsResourceUri(authorsResourceParameters,
+                ResourceUriType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = authors.TotalCount,
+                pageSize = authors.PageSize,
+                currentPage = authors.CurrentPage,
+                totalPages = authors.TotalPages,
+                previousPageLink = previousPageLink,
+                nextPageLink = nextPageLink
+            };
+
+            Response.Headers.Add("X-Pagination",
+                JsonConvert.SerializeObject(paginationMetadata));
 
             //By Default, JsonResult returns a 200 (Ok) Http Status Code
             //return new JsonResult(authorsDTO);
             return Ok(authors);
+        }
+
+        private string CreateAuthorsResourceUri(AuthorsResourceParameters authorsResourceParameters,
+            ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return _urlHelper.Link("GetAuthors",
+                        new
+                        {
+                            pageNumber = authorsResourceParameters.PageNumber - 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });                    
+                case ResourceUriType.NextPage:
+                    return _urlHelper.Link("GetAuthors",
+                        new
+                        {
+                            pageNumber = authorsResourceParameters.PageNumber + 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+                default:
+                    return _urlHelper.Link("GetAuthors",
+                        new
+                        {
+                            pageNumber = authorsResourceParameters.PageNumber,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+            }
         }
 
         [HttpGet("{id}", Name = "GetAuthor")]

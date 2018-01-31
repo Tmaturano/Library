@@ -1,4 +1,5 @@
 ﻿using Library.Domain.Interfaces;
+using Library.Infra.CrossCutting.Helpers;
 using Library.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,11 +29,11 @@ namespace Library.Infra.Data.Repository
             return GetById(id) != null;
         }
 
-        public virtual IEnumerable<TEntity> GetAll(int pageSize, int pageNumber)
+        public virtual PagedList<TEntity> GetAll(int pageSize, int pageNumber)
         {
-            return DbSet.Skip(pageSize * (pageNumber -1))
-                    .Take(pageSize)
-                    .ToList();
+            var collectionBeforePaging = DbSet.ToList();
+
+            return PagedList<TEntity>.Create(collectionBeforePaging, pageNumber, pageSize);
         }
 
         public TEntity GetById(Guid id)

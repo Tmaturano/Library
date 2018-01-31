@@ -3,6 +3,7 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces;
 using Library.Domain.Entities;
 using Library.Domain.Interfaces;
+using Library.Infra.CrossCutting.Helpers;
 using Library.Infra.Data.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -100,11 +101,22 @@ namespace Library.Application.Services
             }
         }
 
-        public IEnumerable<AuthorOutputDto> GetAll(int pageSize, int pageNumber)
+        public PagedList<AuthorOutputDto> GetAll(int pageSize, int pageNumber)
         {
             try
-            {                
-                return _mapper.Map<IEnumerable<Author>, IEnumerable<AuthorOutputDto>>(_authorService.GetAll(pageSize, pageNumber));
+            {
+                var authors = _authorService.GetAll(pageSize, pageNumber);
+
+                /*
+                 Needed to do that because was not possible to use automapper to map from PagedList to PagedList
+                 */
+                var authorsOutputDto = new List<AuthorOutputDto>();
+                foreach (var author in authors)
+                {                    
+                    authorsOutputDto.Add(_mapper.Map<Author, AuthorOutputDto>(author));
+                }
+
+                return new PagedList<AuthorOutputDto>(authorsOutputDto, authors.TotalCount, pageNumber, pageSize);                
             }
             catch (Exception)
             {

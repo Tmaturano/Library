@@ -1,4 +1,5 @@
 ﻿using Library.Application.DTOs;
+using Library.Infra.CrossCutting.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace Library.Application.Interfaces
 {
     public interface IAuthorAppService : IDisposable
     {
-        IEnumerable<AuthorOutputDto> GetAll(int pageSize, int pageNumber);
+        PagedList<AuthorOutputDto> GetAll(int pageSize, int pageNumber);
         (bool sucess, Guid id) Add(AuthorInputDto obj);
         (bool sucess, IEnumerable<Guid> ids) AddAuthorCollection(IEnumerable<AuthorInputDto> authors);
         bool Remove(Guid id);

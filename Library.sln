@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Domain", "Library.Domain\Library.Domain.csproj", "{4F0B1BA8-420D-4B91-8892-713A88ABE1E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Infra.CrossCutting.Helpers", "Library.Infra.CrossCutting.Helpers\Library.Infra.CrossCutting.Helpers.csproj", "{EF4945F1-5698-4050-8B5B-77E8D3AC0620}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{4F0B1BA8-420D-4B91-8892-713A88ABE1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F0B1BA8-420D-4B91-8892-713A88ABE1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F0B1BA8-420D-4B91-8892-713A88ABE1E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF4945F1-5698-4050-8B5B-77E8D3AC0620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF4945F1-5698-4050-8B5B-77E8D3AC0620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF4945F1-5698-4050-8B5B-77E8D3AC0620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF4945F1-5698-4050-8B5B-77E8D3AC0620}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{A7F916E0-1966-4CE2-9DC8-0E0F5970EF4A} = {F8F39A77-4462-483C-9BD4-3CC1B4BD7D0C}
 		{EC758E69-DF90-42D5-B65B-96932E87034B} = {6913D97F-ECB1-48E4-955C-8AE5E220C953}
 		{4F0B1BA8-420D-4B91-8892-713A88ABE1E1} = {EC758E69-DF90-42D5-B65B-96932E87034B}
+		{EF4945F1-5698-4050-8B5B-77E8D3AC0620} = {F8F39A77-4462-483C-9BD4-3CC1B4BD7D0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6A893786-6F20-408F-B079-A649737CFA6D}

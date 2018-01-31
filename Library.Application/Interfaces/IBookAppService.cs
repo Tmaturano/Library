@@ -1,4 +1,5 @@
 ﻿using Library.Application.DTOs;
+using Library.Infra.CrossCutting.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -14,6 +15,6 @@ namespace Library.Application.Interfaces
         bool Remove(Guid id);
         bool Exists(Guid id);
         BookOutputDto GetById(Guid id);
-        IEnumerable<BookOutputDto> GetAll(int pageSize, int pageNumber);
+        PagedList<BookOutputDto> GetAll(int pageSize, int pageNumber);
     }
 }

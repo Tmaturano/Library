@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.Infra.CrossCutting.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace Library.Domain.Interfaces
@@ -10,6 +11,6 @@ namespace Library.Domain.Interfaces
         void Remove(TEntity obj);
         bool Exists(Guid id);
         TEntity GetById(Guid id);
-        IEnumerable<TEntity> GetAll(int pageSize, int pageNumber);
+        PagedList<TEntity> GetAll(int pageSize, int pageNumber);
     }
 }

@@ -3,6 +3,7 @@ using Library.Application.DTOs;
 using Library.Application.Interfaces;
 using Library.Domain.Entities;
 using Library.Domain.Interfaces;
+using Library.Infra.CrossCutting.Helpers;
 using Library.Infra.Data.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -100,11 +101,11 @@ namespace Library.Application.Services
             }
         }
 
-        public IEnumerable<BookOutputDto> GetAll(int pageSize, int pageNumber)
+        public PagedList<BookOutputDto> GetAll(int pageSize, int pageNumber)
         {
             try
             {
-                return _mapper.Map<IEnumerable<Book>, IEnumerable<BookOutputDto>>(_bookService.GetAll(pageSize, pageNumber));
+                return _mapper.Map<PagedList<Book>, PagedList<BookOutputDto>>(_bookService.GetAll(pageSize, pageNumber));
             }
             catch (Exception)
             {
