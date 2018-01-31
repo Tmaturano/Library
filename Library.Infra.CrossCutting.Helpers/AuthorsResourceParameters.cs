@@ -13,9 +13,10 @@
             set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
         }
 
-        #region Filtering properties
+        #region Filtering and Searching properties
         public string Genre { get; set; }
 
+        public string SearchQuery { get; set; }
 
         #endregion
 

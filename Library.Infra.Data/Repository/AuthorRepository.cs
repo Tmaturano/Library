@@ -24,7 +24,7 @@ namespace Library.Infra.Data.Repository
             author.AddBook(book);          
         }
 
-        public PagedList<Author> GetAuthorsByGenre(AuthorsResourceParameters authorsResourceParameters)
+        public PagedList<Author> GetAuthorsByFilter(AuthorsResourceParameters authorsResourceParameters)
         {
             var collectionBeforePaging = DbSet.OrderBy(a => a.FirstName)
                                               .ThenBy(a => a.LastName).AsQueryable();
@@ -34,6 +34,16 @@ namespace Library.Infra.Data.Repository
                 var genreForWhereClause = authorsResourceParameters.Genre.Trim().ToLowerInvariant();
 
                 collectionBeforePaging = collectionBeforePaging.Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
+            }
+
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
+            {
+                var searchForWhereClause = authorsResourceParameters.SearchQuery.Trim().ToLowerInvariant();
+
+                collectionBeforePaging = collectionBeforePaging.Where(
+                                            a => a.Genre.ToLowerInvariant().Contains(searchForWhereClause)
+                                            || a.FirstName.ToLowerInvariant().Contains(searchForWhereClause)
+                                            || a.LastName.ToLowerInvariant().Contains(searchForWhereClause));
             }
 
             return PagedList<Author>.Create(collectionBeforePaging, authorsResourceParameters.PageNumber, authorsResourceParameters.PageSize);

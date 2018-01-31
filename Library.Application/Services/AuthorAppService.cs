@@ -22,14 +22,14 @@ namespace Library.Application.Services
         }
 
         #region Persistance
-        
+
         public (bool sucess, Guid id) Add(AuthorInputDto obj)
         {
             try
             {
                 var author = _mapper.Map<AuthorInputDto, Author>(obj);
                 _authorService.Add(author);
-                
+
 
                 return (unitOfWork.Commit(), author.Id);
             }
@@ -38,7 +38,7 @@ namespace Library.Application.Services
 
                 throw;
             }
-            
+
         }
 
         public (bool sucess, IEnumerable<Guid> ids) AddAuthorCollection(IEnumerable<AuthorInputDto> authors)
@@ -107,22 +107,22 @@ namespace Library.Application.Services
             {
                 PagedList<Author> authors = null;
 
-                if (string.IsNullOrWhiteSpace(authorsResourceParameters.Genre))
-                    authors = _authorService.GetAll(authorsResourceParameters.PageSize, authorsResourceParameters.PageNumber);
+                if (!string.IsNullOrWhiteSpace(authorsResourceParameters.Genre) || !string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
+                    authors = _authorService.GetAuthorsByFilter(authorsResourceParameters);
                 else
-                    authors = _authorService.GetAuthorsByGenre(authorsResourceParameters);
+                    authors = _authorService.GetAll(authorsResourceParameters.PageSize, authorsResourceParameters.PageNumber);
 
                 /*
                  Needed to do that because was not possible to use automapper to map from PagedList to PagedList
                  */
                 var authorsOutputDto = new List<AuthorOutputDto>();
                 foreach (var author in authors)
-                {                    
+                {
                     authorsOutputDto.Add(_mapper.Map<Author, AuthorOutputDto>(author));
                 }
 
                 return new PagedList<AuthorOutputDto>(authorsOutputDto, authors.TotalCount, authorsResourceParameters.PageNumber
-                    , authorsResourceParameters.PageSize);                
+                    , authorsResourceParameters.PageSize);
             }
             catch (Exception)
             {

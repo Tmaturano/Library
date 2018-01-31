@@ -8,6 +8,6 @@ namespace Library.Domain.Interfaces
     public interface IAuthorService : IServiceBase<Author>
     {
         IEnumerable<Author> GetAuthorsByIds(IEnumerable<Guid> ids);
-        PagedList<Author> GetAuthorsByGenre(AuthorsResourceParameters authorsResourceParameters);
+        PagedList<Author> GetAuthorsByFilter(AuthorsResourceParameters authorsResourceParameters);
     }
 }

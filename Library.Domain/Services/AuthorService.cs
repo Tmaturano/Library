@@ -15,9 +15,9 @@ namespace Library.Domain.Services
             _authorRepository = repository;
         }
 
-        public PagedList<Author> GetAuthorsByGenre(AuthorsResourceParameters authorsResourceParameters)
+        public PagedList<Author> GetAuthorsByFilter(AuthorsResourceParameters authorsResourceParameters)
         {
-            return _authorRepository.GetAuthorsByGenre(authorsResourceParameters);
+            return _authorRepository.GetAuthorsByFilter(authorsResourceParameters);
         }
 
         public IEnumerable<Author> GetAuthorsByIds(IEnumerable<Guid> ids)
