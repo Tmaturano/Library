@@ -1,4 +1,4 @@
-﻿namespace Library.API.Helpers
+﻿namespace Library.Infra.CrossCutting.Helpers
 {
     public class AuthorsResourceParameters
     {
@@ -12,6 +12,12 @@
             get => _pageSize;
             set => _pageSize = value > MaxPageSize ? MaxPageSize : value;
         }
+
+        #region Filtering properties
+        public string Genre { get; set; }
+
+
+        #endregion
 
     }
 }

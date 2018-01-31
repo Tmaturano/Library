@@ -2,6 +2,7 @@
 using Library.API.Helpers;
 using Library.Application.DTOs;
 using Library.Application.Interfaces;
+using Library.Infra.CrossCutting.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -32,7 +33,7 @@ namespace Library.API.Controllers
             /*
              The ModelBinding framework is smart because it will look for matching property name inside that class             
              */
-            var authors = _authorService.GetAll(authorsResourceParameters.PageSize, authorsResourceParameters.PageNumber);
+            var authors = _authorService.GetAll(authorsResourceParameters);
             
             var previousPageLink = authors.HasPrevious ? CreateAuthorsResourceUri(authorsResourceParameters,
                 ResourceUriType.PreviousPage) : null;
@@ -67,6 +68,7 @@ namespace Library.API.Controllers
                     return _urlHelper.Link("GetAuthors",
                         new
                         {
+                            genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber - 1,
                             pageSize = authorsResourceParameters.PageSize
                         });                    
@@ -74,6 +76,7 @@ namespace Library.API.Controllers
                     return _urlHelper.Link("GetAuthors",
                         new
                         {
+                            genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber + 1,
                             pageSize = authorsResourceParameters.PageSize
                         });
@@ -81,6 +84,7 @@ namespace Library.API.Controllers
                     return _urlHelper.Link("GetAuthors",
                         new
                         {
+                            genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber,
                             pageSize = authorsResourceParameters.PageSize
                         });

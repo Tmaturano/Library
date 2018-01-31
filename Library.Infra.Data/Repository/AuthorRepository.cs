@@ -1,5 +1,6 @@
 ﻿using Library.Domain.Entities;
 using Library.Domain.Interfaces;
+using Library.Infra.CrossCutting.Helpers;
 using Library.Infra.Data.Context;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,6 @@ namespace Library.Infra.Data.Repository
 
         }
 
-
-
         public void AddBookForAuthor(Guid authorId, Book book)
         {
             var author = GetById(authorId);
@@ -23,6 +22,21 @@ namespace Library.Infra.Data.Repository
                 return;
 
             author.AddBook(book);          
+        }
+
+        public PagedList<Author> GetAuthorsByGenre(AuthorsResourceParameters authorsResourceParameters)
+        {
+            var collectionBeforePaging = DbSet.OrderBy(a => a.FirstName)
+                                              .ThenBy(a => a.LastName).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.Genre))
+            {
+                var genreForWhereClause = authorsResourceParameters.Genre.Trim().ToLowerInvariant();
+
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
+            }
+
+            return PagedList<Author>.Create(collectionBeforePaging, authorsResourceParameters.PageNumber, authorsResourceParameters.PageSize);
         }
 
         public IEnumerable<Author> GetAuthorsByIds(IEnumerable<Guid> ids)

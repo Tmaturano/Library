@@ -101,11 +101,16 @@ namespace Library.Application.Services
             }
         }
 
-        public PagedList<AuthorOutputDto> GetAll(int pageSize, int pageNumber)
+        public PagedList<AuthorOutputDto> GetAll(AuthorsResourceParameters authorsResourceParameters)
         {
             try
             {
-                var authors = _authorService.GetAll(pageSize, pageNumber);
+                PagedList<Author> authors = null;
+
+                if (string.IsNullOrWhiteSpace(authorsResourceParameters.Genre))
+                    authors = _authorService.GetAll(authorsResourceParameters.PageSize, authorsResourceParameters.PageNumber);
+                else
+                    authors = _authorService.GetAuthorsByGenre(authorsResourceParameters);
 
                 /*
                  Needed to do that because was not possible to use automapper to map from PagedList to PagedList
@@ -116,7 +121,8 @@ namespace Library.Application.Services
                     authorsOutputDto.Add(_mapper.Map<Author, AuthorOutputDto>(author));
                 }
 
-                return new PagedList<AuthorOutputDto>(authorsOutputDto, authors.TotalCount, pageNumber, pageSize);                
+                return new PagedList<AuthorOutputDto>(authorsOutputDto, authors.TotalCount, authorsResourceParameters.PageNumber
+                    , authorsResourceParameters.PageSize);                
             }
             catch (Exception)
             {

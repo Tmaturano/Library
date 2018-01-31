@@ -9,7 +9,7 @@ namespace Library.Domain.Interfaces
         void Add(TEntity obj);
         void Remove(TEntity obj);
         void Update(TEntity obj);
-        PagedList<TEntity> GetAll(int pageSize, int pageNumber);
+        PagedList<TEntity> GetAll(int pageSize, int pageNumbers);
         TEntity GetById(Guid id);
         bool Exists(Guid id);
     }
