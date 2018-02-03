@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 
 namespace Library.API.Controllers
 {
@@ -16,37 +17,52 @@ namespace Library.API.Controllers
         private readonly IAuthorAppService _authorAppService;
         private readonly IMapper _mapper;
         private readonly ILogger<BooksController> _logger;
+        private readonly IUrlHelper _urlHelper;
 
-        public BooksController(IBookAppService bookAppService, IAuthorAppService authorAppService, IMapper mapper,
-            ILogger<BooksController> logger)
+        public BooksController(IBookAppService bookAppService, 
+                               IAuthorAppService authorAppService, 
+                               IMapper mapper,
+                               ILogger<BooksController> logger,
+                               IUrlHelper urlHelper)
         {
             _bookAppService = bookAppService;
             _authorAppService = authorAppService;
             _mapper = mapper;
             _logger = logger;
+            _urlHelper = urlHelper;
         }
 
-        [HttpGet()]
+        [HttpGet(Name = "GetBooksForAuthor")]
         public IActionResult GetBooksForAuthor(Guid authorId)
         {
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
-            var books = _bookAppService.GetBooksByAuthorId(authorId);
-            return Ok(books);
+            var booksForAuthor = _bookAppService.GetBooksByAuthorId(authorId);
+
+            //HATEOAS we need to create a link for each group 
+            booksForAuthor = booksForAuthor.Select(book =>
+            {
+                book = CreateLinksForBook(book);
+                return book;
+            });
+
+            var wrapper = new LinkedCollectionResourceWrapperDto<BookOutputDto>(booksForAuthor);
+
+            return Ok(CreateLinksForBooks(wrapper));
         }
 
-        [HttpGet("{bookId}", Name = "GetBookForAuthor")]
-        public IActionResult GetBookForAuthor(Guid authorId, Guid bookId)
+        [HttpGet("{id}", Name = "GetBookForAuthor")]
+        public IActionResult GetBookForAuthor(Guid authorId, Guid id)
         {
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
-            var bookForAuthor = _bookAppService.GetBookForAuthor(authorId, bookId);
+            var bookForAuthor = _bookAppService.GetBookForAuthor(authorId, id);
             if (bookForAuthor == null)
                 return NotFound();
 
-            return Ok(bookForAuthor);
+            return Ok(CreateLinksForBook(bookForAuthor));
         }
 
         [HttpPost()]
@@ -73,11 +89,11 @@ namespace Library.API.Controllers
             bookToReturn.Id = result.id;
             bookToReturn.AuthorId = authorId;
             return CreatedAtRoute("GetBookForAuthor",
-                new { authorId = bookToReturn.AuthorId, bookId = bookToReturn.Id },
-                bookToReturn);
+                new { authorId = bookToReturn.AuthorId, id = bookToReturn.Id },
+                CreateLinksForBook(bookToReturn));
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteBookForAuthor")]
         public IActionResult DeleteBookForAuthor(Guid authorId, Guid id)
         {
             if (!_authorAppService.AuthorExists(authorId))
@@ -97,7 +113,7 @@ namespace Library.API.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateBookForAuthor")]
         public IActionResult UpdateBookForAuthor(Guid authorId, Guid id, [FromBody]BookUpdateDto book)
         {
             if (book == null)
@@ -136,7 +152,7 @@ namespace Library.API.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}", Name = "PartiallyUpdateBookForAuthor")]
         public IActionResult PartiallyUpdateBookForAuthor(Guid authorId, Guid id, 
             [FromBody]JsonPatchDocument<BookUpdateDto> patchDoc)
         {
@@ -168,6 +184,46 @@ namespace Library.API.Controllers
                 throw new Exception($"Patching a book {id} for author {authorId} failed on save.");
 
             return NoContent();
+        }
+
+
+        private BookOutputDto CreateLinksForBook(BookOutputDto book)
+        {
+            //HATEOAS: here we decide in which links should be returned when a consumer of the api gets back a book representation
+            //Attention: in the new {id = book.Id} the anonymous type "id" must be the same of the parameter of the given method
+            book.Links.Add(new LinkDto(_urlHelper.Link("GetBookForAuthor", new { id = book.Id }),
+                "self", //this is the part that the consumer of the API have to know about, because that is this the will be used by the consumer to see a specific piece of functionality is offered by the api.
+                "GET"));
+
+            book.Links.Add(new LinkDto(_urlHelper.Link("DeleteBookForAuthor", new { id = book.Id }),
+                "delete_book", //this is the part that the consumer of the API have to know about, because that is this the will be used by the consumer to see a specific piece of functionality is offered by the api.
+                "DELETE"));
+
+            book.Links.Add(new LinkDto(_urlHelper.Link("UpdateBookForAuthor", new { id = book.Id }),
+                "udpdate_book", //this is the part that the consumer of the API have to know about, because that is this the will be used by the consumer to see a specific piece of functionality is offered by the api.
+                "PUT"));
+
+            book.Links.Add(new LinkDto(_urlHelper.Link("PartiallyUpdateBookForAuthor", new { id = book.Id }),
+                "partially_update_book", //this is the part that the consumer of the API have to know about, because that is this the will be used by the consumer to see a specific piece of functionality is offered by the api.
+                "PATCH"));
+
+            return book;
+        }
+        
+        /// <summary>
+        /// this method is to add the HATEOAS support for GetBooksForAuthor to return a link to itself
+        /// </summary>
+        /// <param name="booksWrapper"></param>
+        /// <returns></returns>
+        private LinkedCollectionResourceWrapperDto<BookOutputDto> CreateLinksForBooks(
+            LinkedCollectionResourceWrapperDto<BookOutputDto> booksWrapper)
+        {            
+            booksWrapper.Links.Add(
+                new LinkDto(_urlHelper.Link("GetBooksForAuthor", new { }),
+                "self",
+                "GET"));
+
+            return booksWrapper;
         }
 
     }
