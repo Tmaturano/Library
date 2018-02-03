@@ -21,13 +21,14 @@ namespace Library.Infra.Data.Repository
             if (author == null)
                 return;
 
-            author.AddBook(book);          
+            author.AddBook(book);
         }
 
         public PagedList<Author> GetAuthorsByFilter(AuthorsResourceParameters authorsResourceParameters)
         {
-            var collectionBeforePaging = DbSet.OrderBy(a => a.FirstName)
-                                              .ThenBy(a => a.LastName).AsQueryable();
+            var collectionBeforePaging = DbSet
+                                            .OrderBy(a => a.FirstName)
+                                            .ThenBy(a => a.LastName).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(authorsResourceParameters.Genre))
             {

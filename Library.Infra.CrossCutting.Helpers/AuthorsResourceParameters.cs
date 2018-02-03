@@ -20,5 +20,16 @@
 
         #endregion
 
+        #region Sorting properties
+
+        public string OrderBy { get; set; } = "Name";
+
+        #endregion
+
+        #region Data Shapping
+        public string Fields { get; set; }
+
+        #endregion
+
     }
 }

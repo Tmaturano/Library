@@ -18,12 +18,17 @@ namespace Library.API.Controllers
         private readonly IAuthorAppService _authorService;
         private readonly IMapper _mapper;
         private readonly IUrlHelper _urlHelper;
-        
-        public AuthorsController(IAuthorAppService authorService, IMapper mapper, IUrlHelper urlHelper)
+        private readonly ITypeHelperService _typeHelperService;
+
+        public AuthorsController(IAuthorAppService authorService, 
+                                 IMapper mapper, 
+                                 IUrlHelper urlHelper, 
+                                 ITypeHelperService typeHelperService)
         {
             _authorService = authorService;
             _mapper = mapper;
             _urlHelper = urlHelper;
+            _typeHelperService = typeHelperService;
         }
 
         [HttpGet(Name = "GetAuthors")]
@@ -33,6 +38,10 @@ namespace Library.API.Controllers
             /*
              The ModelBinding framework is smart because it will look for matching property name inside that class             
              */
+
+            if (!_typeHelperService.TypeHasProperties<AuthorOutputDto>(authorsResourceParameters.Fields))
+                return BadRequest();
+
             var authors = _authorService.GetAll(authorsResourceParameters);
             
             var previousPageLink = authors.HasPrevious ? CreateAuthorsResourceUri(authorsResourceParameters,
@@ -56,7 +65,7 @@ namespace Library.API.Controllers
 
             //By Default, JsonResult returns a 200 (Ok) Http Status Code
             //return new JsonResult(authorsDTO);
-            return Ok(authors);
+            return Ok(authors.ShapeData(authorsResourceParameters.Fields));
         }
 
         /// <summary>
@@ -74,6 +83,7 @@ namespace Library.API.Controllers
                     return _urlHelper.Link("GetAuthors",
                         new
                         {
+                            fields = authorsResourceParameters.Fields,
                             searchQuery = authorsResourceParameters.SearchQuery,
                             genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber - 1,
@@ -83,6 +93,7 @@ namespace Library.API.Controllers
                     return _urlHelper.Link("GetAuthors",
                         new
                         {
+                            fields = authorsResourceParameters.Fields,
                             searchQuery = authorsResourceParameters.SearchQuery,
                             genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber + 1,
@@ -92,6 +103,7 @@ namespace Library.API.Controllers
                     return _urlHelper.Link("GetAuthors",
                         new
                         {
+                            fields = authorsResourceParameters.Fields,
                             searchQuery = authorsResourceParameters.SearchQuery,
                             genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber,

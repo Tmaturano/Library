@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.API.Helpers;
 using Library.Application.AutoMapper;
 using Library.Infra.CrossCutting.IoC;
 using Library.Infra.Data.Context;
@@ -141,6 +142,8 @@ namespace Library.API
                 var actionContext = implementationFactory.GetService<IActionContextAccessor>().ActionContext;
                 return new UrlHelper(actionContext);
             });
+
+            services.AddTransient<ITypeHelperService, TypeHelperService>();
         }
     }
 }
