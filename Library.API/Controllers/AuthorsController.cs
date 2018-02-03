@@ -113,15 +113,17 @@ namespace Library.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetAuthor")]
-        public IActionResult GetAuthor(Guid id)
+        public IActionResult GetAuthor(Guid id, [FromQuery] string fields)
         {
+            if (!_typeHelperService.TypeHasProperties<AuthorOutputDto>(fields))
+                return BadRequest();
+
             var author = _authorService.GetById(id);
 
             if (author == null)
-                return NotFound();
-            
+                return NotFound();            
 
-            return Ok(author);
+            return Ok(author.ShapeDataObject(fields));
         }
 
         [HttpPost()]
