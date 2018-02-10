@@ -157,7 +157,8 @@ namespace Library.API.Controllers
 
         [HttpPost(Name = "CreateAuthorWithDateOfDeath")]
         [RequestHeaderMatchesMediaType("Content-Type",
-            new[] { "application/vnd.tmaturano.authorwithdateofdeath.full+json" })] //should only accept requests with this media type
+            new[] { "application/vnd.tmaturano.authorwithdateofdeath.full+json",
+                    "application/vnd.tmaturano.authorwithdateofdeath.full+xml"})] //should only accept requests with these media type
         public IActionResult CreateAuthorWithDateOfDeath([FromBody]AuthorInputWithDateOfDeathDto authorDto)
         {
             if (authorDto == null)

@@ -67,9 +67,13 @@ namespace Library.API
             {
                 //if false, the api will return responses in the default supported format.
                 setupAction.ReturnHttpNotAcceptable = true; //returns a hhtp 406 if media type not supported
-                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+                //setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-                
+
+                var xmlDataContractSerializerInputFormatter = new XmlDataContractSerializerInputFormatter();
+                xmlDataContractSerializerInputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.authorwithdateofdeath.full+xml");
+                setupAction.InputFormatters.Add(xmlDataContractSerializerInputFormatter);
+                                
                 var jsonInputFormatter = setupAction.InputFormatters.OfType<JsonInputFormatter>().FirstOrDefault();
                 jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.author.full+json");
                 jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.authorwithdateofdeath.full+json");
