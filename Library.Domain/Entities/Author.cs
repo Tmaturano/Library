@@ -12,7 +12,9 @@ namespace Library.Domain.Entities
         public string LastName { get; private set; }
                 
         public DateTimeOffset DateOfBirth { get; private set; }
-                
+
+        public DateTimeOffset? DateOfDeath { get; private set; }
+
         public string Genre { get; private set; }
 
         public ICollection<Book> Books { get; private set; } = new List<Book>();
@@ -30,6 +32,11 @@ namespace Library.Domain.Entities
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Genre = genre;            
+        }
+
+        public void SetDateOfDeath(DateTimeOffset dateOfDeath)
+        {
+            DateOfDeath = dateOfDeath;
         }
 
         public void AddBook(Book book)

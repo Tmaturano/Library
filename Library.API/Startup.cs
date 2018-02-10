@@ -49,8 +49,9 @@ namespace Library.API
         //https://github.com/KevinDockx/RESTfulAPIAspNetCore_Course
         public void ConfigureServices(IServiceCollection services)
         {
-            var teste = Configuration["MySecret"];
-            //services.AddDbContext<LibraryContext>(o => 
+            //var teste = Configuration["MySecret"];
+            //Need to call add-migration Initial in the Data Project and uncomment the line bellow to test in a sql server environment
+            //services.AddDbContext<LibraryContext>(o =>
             //    o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<LibraryContext>(o =>
@@ -72,8 +73,6 @@ namespace Library.API
 
                 var jsonOutputFormatter = setupAction.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
                 jsonOutputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.hateoas+json");
-
-
             })
             .AddJsonOptions(options =>
             {

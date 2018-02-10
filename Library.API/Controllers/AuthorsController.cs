@@ -126,7 +126,7 @@ namespace Library.API.Controllers
             return Ok(author.ShapeDataObject(fields));
         }
 
-        [HttpPost()]
+        [HttpPost(Name = "CreateAuthor")]
         public IActionResult CreateAuthor([FromBody]AuthorInputDto authorDto)
         {
             if (authorDto == null)
