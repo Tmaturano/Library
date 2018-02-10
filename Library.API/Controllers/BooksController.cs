@@ -33,27 +33,33 @@ namespace Library.API.Controllers
         }
 
         [HttpGet(Name = "GetBooksForAuthor")]
-        public IActionResult GetBooksForAuthor(Guid authorId)
+        public IActionResult GetBooksForAuthor(Guid authorId, [FromHeader(Name = "Accept")]string mediaType)
         {
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
 
             var booksForAuthor = _bookAppService.GetBooksByAuthorId(authorId);
 
-            //HATEOAS we need to create a link for each group 
-            booksForAuthor = booksForAuthor.Select(book =>
+            if (mediaType == "application/vnd.tmaturano.hateoas+json")
             {
-                book = CreateLinksForBook(book);
-                return book;
-            });
+                //HATEOAS we need to create a link for each group 
+                booksForAuthor = booksForAuthor.Select(book =>
+                {
+                    book = CreateLinksForBook(book);
+                    return book;
+                });
 
-            var wrapper = new LinkedCollectionResourceWrapperDto<BookOutputDto>(booksForAuthor);
-
-            return Ok(CreateLinksForBooks(wrapper));
+                var wrapper = new LinkedCollectionResourceWrapperDto<BookOutputDto>(booksForAuthor);
+                return Ok(CreateLinksForBooks(wrapper));
+            }
+            else
+            {
+                return Ok(booksForAuthor);
+            }
         }
 
         [HttpGet("{id}", Name = "GetBookForAuthor")]
-        public IActionResult GetBookForAuthor(Guid authorId, Guid id)
+        public IActionResult GetBookForAuthor(Guid authorId, Guid id, [FromHeader(Name ="Accept")]string mediaType)
         {
             if (!_authorAppService.AuthorExists(authorId))
                 return NotFound();
@@ -62,7 +68,14 @@ namespace Library.API.Controllers
             if (bookForAuthor == null)
                 return NotFound();
 
-            return Ok(CreateLinksForBook(bookForAuthor));
+            if (mediaType == "application/vnd.tmaturano.hateoas+json")
+            {
+                return Ok(CreateLinksForBook(bookForAuthor));
+            }
+            else
+            {
+                return Ok(bookForAuthor);
+            }
         }
 
         [HttpPost()]

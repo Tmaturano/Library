@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Library.API
@@ -67,6 +68,12 @@ namespace Library.API
                 setupAction.ReturnHttpNotAcceptable = true; //returns a hhtp 406 if media type not supported
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+
+
+                var jsonOutputFormatter = setupAction.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
+                jsonOutputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.hateoas+json");
+
+
             })
             .AddJsonOptions(options =>
             {
