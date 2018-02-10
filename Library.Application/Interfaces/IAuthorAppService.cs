@@ -9,6 +9,7 @@ namespace Library.Application.Interfaces
     {
         PagedList<AuthorOutputDto> GetAll(AuthorsResourceParameters authorsResourceParameters);
         (bool sucess, Guid id) Add(AuthorInputDto obj);
+        (bool sucess, Guid id) Add(AuthorInputWithDateOfDeathDto obj);
         (bool sucess, IEnumerable<Guid> ids) AddAuthorCollection(IEnumerable<AuthorInputDto> authors);
         bool Remove(Guid id);
         bool Update(AuthorInputDto obj);

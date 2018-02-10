@@ -69,7 +69,10 @@ namespace Library.API
                 setupAction.ReturnHttpNotAcceptable = true; //returns a hhtp 406 if media type not supported
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-
+                
+                var jsonInputFormatter = setupAction.InputFormatters.OfType<JsonInputFormatter>().FirstOrDefault();
+                jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.author.full+json");
+                jsonInputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.authorwithdateofdeath.full+json");
 
                 var jsonOutputFormatter = setupAction.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
                 jsonOutputFormatter?.SupportedMediaTypes.Add("application/vnd.tmaturano.hateoas+json");

@@ -127,6 +127,8 @@ namespace Library.API.Controllers
         }
 
         [HttpPost(Name = "CreateAuthor")]
+        [RequestHeaderMatchesMediaType("Content-Type",
+            new [] { "application/vnd.tmaturano.author.full+json" })] //should only accept requests with this media type
         public IActionResult CreateAuthor([FromBody]AuthorInputDto authorDto)
         {
             if (authorDto == null)
@@ -151,6 +153,37 @@ namespace Library.API.Controllers
                 new { id = authorToReturn.Id },
                 authorToReturn);
         }
+
+
+        [HttpPost(Name = "CreateAuthorWithDateOfDeath")]
+        [RequestHeaderMatchesMediaType("Content-Type",
+            new[] { "application/vnd.tmaturano.authorwithdateofdeath.full+json" })] //should only accept requests with this media type
+        public IActionResult CreateAuthorWithDateOfDeath([FromBody]AuthorInputWithDateOfDeathDto authorDto)
+        {
+            if (authorDto == null)
+                return BadRequest();
+
+            var result = _authorService.Add(authorDto);
+            if (!result.sucess)
+            {
+                //Throwing an exception is expensive, but at this case, we have at the global level on Startup handling all the
+                //500 Error, so to keep it in one place, I'm throwing .
+                throw new Exception("Creating an author failed on save.");
+                //return StatusCode(500, "");
+            }
+
+            var authorToReturn = _mapper.Map<AuthorOutputDto>(authorDto);
+            authorToReturn.Id = result.id;
+
+            //CreatedAtRoute will contain the URI where the newly author can be found 1st parameter
+            //also, the id of the generated author in 2nd parameter
+            //The URI is sent through response's header Location
+            return CreatedAtRoute("GetAuthor",
+                new { id = authorToReturn.Id },
+                authorToReturn);
+        }
+
+
 
         [HttpPost("createauthors")]
         public IActionResult CreateAuthorCollection([FromBody]IEnumerable<AuthorInputDto> authorsCollection)

@@ -12,9 +12,15 @@ namespace Library.Application.AutoMapper
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
                     $"{src.FirstName} {src.LastName}"))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
-                    src.DateOfBirth.GetCurrentAge()));
+                    src.DateOfBirth.GetCurrentAge(null)));
 
             CreateMap<BookInputDto, BookOutputDto>();
+
+            CreateMap<AuthorInputWithDateOfDeathDto, AuthorOutputDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
+                    $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
+                    src.DateOfBirth.GetCurrentAge(src.DateOfDeath)));
         }
     }
 }

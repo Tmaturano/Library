@@ -41,6 +41,23 @@ namespace Library.Application.Services
 
         }
 
+        public (bool sucess, Guid id) Add(AuthorInputWithDateOfDeathDto obj)
+        {
+            try
+            {
+                var author = _mapper.Map<AuthorInputWithDateOfDeathDto, Author>(obj);
+                author.SetDateOfDeath(obj.DateOfDeath.Value);
+                _authorService.Add(author);
+                
+                return (unitOfWork.Commit(), author.Id);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public (bool sucess, IEnumerable<Guid> ids) AddAuthorCollection(IEnumerable<AuthorInputDto> authors)
         {
             try

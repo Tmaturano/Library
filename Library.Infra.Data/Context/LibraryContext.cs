@@ -2,8 +2,6 @@
 using Library.Infra.Data.EntityConfig;
 using Library.Infra.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace Library.Infra.Data.Context
 {
