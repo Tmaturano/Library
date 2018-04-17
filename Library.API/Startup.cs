@@ -94,13 +94,15 @@ namespace Library.API
             services.AddHttpCacheHeaders(
                 (expirationModelOptions =>
                 {
-                   expirationModelOptions.MaxAge = 600;
+                   expirationModelOptions.MaxAge = 60;
                 }),
                 (validationModelOptions =>
                 {
                     validationModelOptions.AddMustRevalidate = true;
                 })
             );
+
+            services.AddResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -145,14 +147,16 @@ namespace Library.API
                 });
             }
 
-            libraryContext.EnsureSeedDataForContext();
-
             app.UseCors(c =>
             {
                 c.AllowAnyHeader();
                 c.AllowAnyMethod();
                 c.AllowAnyOrigin();
             });
+
+            libraryContext.EnsureSeedDataForContext();
+               
+            app.UseResponseCaching();
 
             app.UseHttpCacheHeaders();
 
