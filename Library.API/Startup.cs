@@ -155,10 +155,10 @@ namespace Library.API
             });
 
             libraryContext.EnsureSeedDataForContext();
-               
-            app.UseResponseCaching();
 
             app.UseHttpCacheHeaders();
+
+            app.UseResponseCaching();            
 
             app.UseMvc();
         }
