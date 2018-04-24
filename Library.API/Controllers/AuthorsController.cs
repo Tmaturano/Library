@@ -240,5 +240,12 @@ namespace Library.API.Controllers
 
             return NoContent();
         }
+
+        [HttpOptions]
+        public IActionResult GetAuthorsOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+            return Ok();
+        }
     }
 }
