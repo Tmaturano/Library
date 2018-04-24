@@ -32,6 +32,7 @@ namespace Library.API.Controllers
         }
 
         [HttpGet(Name = "GetAuthors")]
+        [HttpHead]
         public IActionResult GetAuthors(AuthorsResourceParameters authorsResourceParameters) //([FromQuery(Name = "page")]int pageNumber = 1, [FromQuery]int pageSize = 10)
         {
             //pageSize = pageSize > MaxPageSize ? MaxPageSize : pageSize;
