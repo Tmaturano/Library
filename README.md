@@ -1,4 +1,4 @@
 # Library
 A .Net Core Library API
 
-Under development
+Library is a simple demonstration of Restful web API using .Net Core
